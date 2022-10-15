@@ -1,8 +1,28 @@
 # template-repo
 <!-- Enter a description for the repository -->
 
+## Authors:
+- Robert Shepley
+- Timothee Odushina
+- Junyoung Son
+- Daniel Frey
+- Keelen Fisher
+
 ## Documentation
 <!-- What does this repository do? Is there anything the user needs to do? Is there an end-user? -->
+
+MVP:
+User Signs in to the terminal and inputs data through a series of questions, 
+Data is stored in the queue, along with third Party APIs that are aligned with the questions.
+Terminal acts like the Client Application
+
+Stretch Goals 
+Users can access benefits such as events, location, filtered songs, filtered choices of food, etc.
+AWS -> EC2 
+Implementing Containers
+Use Trulioo for text message
+
+
 
 ## Tests
 <!-- Are there any tests? How was it tested? -->
