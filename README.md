@@ -26,8 +26,12 @@ User can only own up to # of cards
 Open API Discord Bot
 (Optional:) User can import data (their cards) either import a single card or a JSON object with as many cards as you’d like (array of card titles) 
 
+## Document Notes
 
+<!-- Breifly (or as specific as you like) explain your process in building out project tasks from each memeber. How did you create certain routes and functions? -->
 
+- Keelen Fisher: Creating Signin and Signup routes in the repo:
+  Goal was to understand bearer auth and how to use jwt. Building the usersSchema was perhaps optional but good to make to understand how a user can create their account on a deeper level. 
 
 ## Tests
 <!-- Are there any tests? How was it tested? -->
