@@ -1,18 +1,17 @@
 'use strict';
 const express = require('express');
-const bearerAuth = require('../auth/middlewre/bearer');
-const { userModel } = require('./models');
+// const bearerAuth = require('./auth/middlewre/bearer');
+const { userModel } = require('./auth/models/usersSchema');
 const app = express()
 const router = express.Router();
 const bcrypt = require('bcrypt');
 
 
-const PORT = process.env || 3002
+// const PORT = process.env || 3002
 
 
 app.get('/userWelcome', (req, res) => {
-  let { name } = req.query;
-  res.status(200).send(`Welcome ${name}, to the Magic of the Gathering Collection Card Porfolio!! You much signup/signin to join and add as many cards as you like.`)
+  res.status(200).send(`Welcome, to the Magic of the Gathering Collection Card Porfolio!! You much signup/signin to join and add as many cards as you like.`);
 })
 
 
@@ -41,9 +40,15 @@ router.post('/signup', async (req, res, next) => {
 
 
 //define a signin route to returns user to client (confirm user auth)
-router.post('/signin', bearerAuth, (req, res, next) => {
+router.post('/signin', (req, res, next) => {
   res.status(200).send(req.user);
 });
 
 
-app.listen(PORT, console.log(`Server is started on Port ${PORT}`));
+
+
+
+module.exports = {
+ start:(PORT) => app.listen(PORT, '127.0.0.1' ,console.log('Server has started on: ', PORT))
+
+}

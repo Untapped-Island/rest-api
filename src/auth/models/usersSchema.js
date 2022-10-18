@@ -42,4 +42,4 @@ userModel.authenticateBearer = async (token) => {
 };
 
 
-module.exports = userModel;
+module.exports = { userModel: userModel};
