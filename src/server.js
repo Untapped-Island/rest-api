@@ -31,7 +31,7 @@ app.use(express.json());
 
 // const PORT = process.env || 3002
 app.get('/userWelcome', (req, res) => {
-  res.status(200).send(`Welcome, to the Magic of the Gathering Collection Card Porfolio!! You must signup/signin to join and add as many cards as you like.`);
+  res.status(200).send(`User Build.`);
 })
 
 app.get('/users', bearerAuth, async (req, res, next) => {
@@ -73,6 +73,10 @@ app.post('/signin', (req, res, next) => {
     next('signin error occurred');
   }
 });
+
+// user PUT, GET, and DELETE routes:
+
+
 
 /**
  * SEPARATE THIS LATER TO A NEW MODULE. REST API LOGIC.
