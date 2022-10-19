@@ -2,7 +2,7 @@
 
 const bcrypt = require('bcrypt');
 const base64 = require('base-64');
-const prisma = require("./prisma-client.js");
+const prisma = require("../../database-logic/prisma-client.js");
 const jwt = require('../../../utils/jwt.js');
 
 async function basicAuth(req, res, next) {
@@ -18,7 +18,7 @@ async function basicAuth(req, res, next) {
     let [username, password] = decodedAuthString.split(':');
     // console.log('username:', username);
     // console.log('password:'.password);
-    let user = await prisma.user.findUnique({ 
+    let user = await prisma.player.findUnique({ 
       where: { 
         name: username
       } 
