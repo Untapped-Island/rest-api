@@ -2,7 +2,8 @@
 
 const bcrypt = require('bcrypt');
 const base64 = require('base-64');
-const { userModel } = require('../models/usersSchema.js');
+const prisma = require("../../database-logic/prisma-client.js");
+const jwt = require('../../../utils/jwt.js');
 
 async function basicAuth(req, res, next) {
   let { authorization } = req.headers;
@@ -17,19 +18,25 @@ async function basicAuth(req, res, next) {
     let [username, password] = decodedAuthString.split(':');
     // console.log('username:', username);
     // console.log('password:'.password);
-    let user = await userModel.findOne({ where: { username } });
+    let user = await prisma.player.findUnique({ 
+      where: { 
+        name: username
+      } 
+    });
     // console.log('user:', user);
     if (user) {
 
       let validUser = await bcrypt.compare(password, user.password);
       // console.log('validUser', validUser);
       if (validUser) {
-        req.user = user;
+        req.user = user.name;
+        req.accessToken = await jwt.signAccessToken(user.name);
         next();
       } else {
-        next('Not Authorized');
+        next('Invalid username or password');
       }
     }
   }
 }
 module.exports = {basicAuth};
+
