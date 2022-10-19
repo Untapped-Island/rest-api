@@ -18,13 +18,38 @@ async function getOneCardByName(name) {
   return card
 }
 
-async function getCardsBySearchQuery(query) {
-  const cards = await prisma.card.findMany({
-    where: {
-      name: {
-        search: query.split(" ").join(" & "),
-      },
+async function getCardsByFilter(query) {
+  let allSearchQueries = []
+  if (query.search) allSearchQueries.push({
+    name: {
+      search: query.search.split(" ").join(" & "),
     },
+  })
+  if (query.colors) allSearchQueries.push({
+    colors: parseInt(query.colors)
+  })
+  if (query.colorIdentity) allSearchQueries.push({
+    colorIdentity: parseInt(query.colorIdentity)
+  })
+  if (query.formats) allSearchQueries.push({
+    formats: parseInt(query.formats)
+  })
+  if (query.power) allSearchQueries.push({
+    power: parseInt(query.power)
+  })
+  if (query.toughness) allSearchQueries.push({
+    toughness: parseInt(query.toughness)
+  })
+  if (query.manaValue) allSearchQueries.push({
+    manaValue: parseInt(query.manaValue)
+  })
+  const page = parseInt(query.page) - 1 || 0
+  const limit = parseInt(query.limit) || 10
+  const cards = await prisma.card.findMany({
+    where: { AND: allSearchQueries },
+    take: limit,
+    skip: limit * page,
+    orderBy: {name: 'asc'}
   })
   return cards
 }
@@ -32,5 +57,5 @@ async function getCardsBySearchQuery(query) {
 module.exports = {
   getOneCardById,
   getOneCardByName,
-  getCardsBySearchQuery
+  getCardsByFilter
 }

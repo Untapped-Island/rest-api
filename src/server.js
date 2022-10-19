@@ -13,7 +13,7 @@ const notFound = require('./error-handlers/404.js');
 // DATABASE FUNCTIONS
 const { getOneCardById, 
   getOneCardByName, 
-  getCardsBySearchQuery
+  getCardsByFilter
 } = require('./database-logic/get-card-functions');
 
 const { addCardToProfileById } = require('./database-logic/user-functions')
@@ -123,18 +123,8 @@ app.get('/cards/:id', async (req, res, next) => {
 
 app.get('/cards', async (req, res, next) => {
   try {
-    // /card?name=Jim&color=red
-    const query = req.query;
-    let searchObject = Object.keys(query).map(key => {
-      let searchParam = {}
-      searchParam[key] = query[key]
-      return searchParam
-    })
-    if (query.search) {
-      console.log(query.search)
-      const cards = await getCardsBySearchQuery(query.search)
-      res.status(200).send(cards)
-    }
+    const cards = await getCardsByFilter(req.query)
+    res.status(200).send(cards)
   } catch (err) {
     console.error(err)
     serverError(err, req, res)
