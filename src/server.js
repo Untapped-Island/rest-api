@@ -1,13 +1,30 @@
 'use strict';
+
+require('dotenv').config();
+
 const express = require('express');
+
+// CUSTOM MIDDLEWARE
 const bearerAuth = require('./auth/middleware/bearer');
 const basicAuth = require('./auth/middleware/basic')
 const { users } = require('./auth/models/usersSchema');
+const serverError = require('./error-handlers/500.js')
+const notFound = require('./error-handlers/404.js')
+
+// DATABASE FUNCTIONS
+const { getOneCardById, 
+  getOneCardByName, 
+  getCardsBySearchQuery
+} = require('./database-logic/get-card-functions')
+
+// INSTANTIATE EXPRESS AND CORS
 const app = express();
 const cors = require('cors');
+
+// USE MIDDLEWARE IN ALL ROUTES
 app.use(cors());
 app.use(express.json());
-require('dotenv').config();
+
 // const router = express.Router();
 // const bcrypt = require('bcrypt');
 
@@ -58,9 +75,58 @@ app.post('/signin', (req, res, next) => {
   }
 });
 
+/**
+ * SEPARATE THIS LATER TO A NEW MODULE. REST API LOGIC.
+ */
 
+app.get('/card/:id', async (req, res, next) => {
+  try {
+    const card = await getOneCardById(req.params.id)
+    res.status(200).send(card)
+  } catch (err) {
+    console.error(err)
+    serverError(err, req, res)
+  }
+})
 
+app.get('/card', async (req, res, next) => {
+  try {
+    // /card?name=Jim&color=red
+    const query = req.query;
+    let searchObject = Object.keys(query).map(key => {
+      let searchParam = {}
+      searchParam[key] = query[key]
+      return searchParam
+    })
+    if (query.search) {
+      console.log(query.search)
+      const cards = await getCardsBySearchQuery(query.search)
+      res.status(200).send(cards)
+    }
+  } catch (err) {
+    console.error(err)
+    serverError(err, req, res)
+  }
+})
 
+// const result = await prisma.card.findMany({
+//   where: {
+//     AND: [
+//       {
+//         name: {
+//           search: 'swamp',
+//         },
+//       },
+//       {
+//         fullType: {
+//           contains: 'Basic Land',
+//         },
+//       },
+//     ],
+//   },
+// })
+// console.log(result)
+// }
 
 module.exports = {
  start:(PORT) => app.listen(PORT, '127.0.0.1', console.log('Server has started on: ', PORT))
