@@ -43,7 +43,14 @@ async function getCardsByFilter(query) {
   if (query.manaValue) allSearchQueries.push({
     manaValue: parseInt(query.manaValue)
   })
-  const cards = await prisma.card.findMany({ where: { AND: allSearchQueries } })
+  const page = parseInt(query.page) - 1 || 0
+  const limit = parseInt(query.limit) || 10
+  const cards = await prisma.card.findMany({
+    where: { AND: allSearchQueries },
+    take: limit,
+    skip: limit * page,
+    orderBy: {name: 'asc'}
+  })
   return cards
 }
 
