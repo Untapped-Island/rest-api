@@ -14,7 +14,7 @@ require('dotenv').config();
 
 // const PORT = process.env || 3002
 app.get('/userWelcome', (req, res) => {
-  res.status(200).send(`Welcome, to the Magic of the Gathering Collection Card Porfolio!! You must signup/signin to join and add as many cards as you like.`);
+  res.status(200).send(`User Build.`);
 })
 
 app.get('/users', bearerAuth, async (req, res, next) => {
