@@ -1,6 +1,9 @@
 'use strict';
 
-// both users and index code within the same file.
+const {Sequelize, DataTypes} = require('sequelize'); 
+const databaseUrl = 'sqlite::memory:'
+const database = new Sequelize(databaseUrl);
+
 const jwt = require('jsonwebtoken');
 
 const userModel = (sequelizeDatabase, DataTypes) => {
@@ -26,20 +29,21 @@ const userModel = (sequelizeDatabase, DataTypes) => {
   return model;
 };
 
-userModel.authenticateBearer = async (token) => {
-  try {
-    let payload = jwt.verify(token, process.env.API_SECRET);
+const userTable = userModel(database, DataTypes);
+// userModel.authenticateBearer = async (token) => {
+  //   try {
+//     let payload = jwt.verify(token, process.env.API_SECRET);
 
-    const user = await this.findOne({ where: { username: payload.username } });
-    if (user) {
-      return user;
-    }
-  }
-  catch (e) {
-    console.error(e);
-    return e;
-  }
-};
+//     const user = await this.findOne({ where: { username: payload.username } });
+//     if (user) {
+//       return user;
+//     }
+//   }
+//   catch (e) {
+//     console.error(e);
+//     return e;
+//   }
+// };
 
 
-module.exports = { userModel: userModel};
+module.exports = { users: userTable};
