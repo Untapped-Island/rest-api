@@ -4,10 +4,15 @@ const { userModel } = require('../models/usersSchema');
 
 module.exports = async (req, res, next) => {
   if (!req.headers.authorization) {
-    next('Invalid Login');
+    console.log('No authorization provided. Access token required.')
+    next('Access token is required');
   } else {
     try {
-      let token = req.headers.authorization.split(' ').pop();
+      const token = req.headers.authorization.split(' ').pop();
+      if (!token) {
+        console.log('No access token provided')
+        return next('Access token is required')
+      }
       console.log('from bearer middleware', token);
 
       let validUser = userModel.authorization(token);

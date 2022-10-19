@@ -64,7 +64,6 @@ app.post('/signup', async (req, res, next) => {
 });
 
 
-
 //define a signin route to returns user to client (confirm user auth)
 app.post('/signin', (req, res, next) => {
   try{
