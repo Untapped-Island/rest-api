@@ -1,15 +1,19 @@
 'use strict';
 
 const express = require('express');
-const bearerAuth = require('./auth/middleware/bearer');
+const bearerAuth = require('../../src/auth/middleware/bearer');
 // const basicAuth = require('./auth/middleware/basic')
-const { usersSchema } = require('./auth/models/usersSchema');
+const { usersSchema } = require('../../src/auth/models/usersSchema');
 const app = express();
 const cors = require('cors');
 app.use(cors());
 app.use(express.json());
 require('dotenv').config();
 const userRouter = express.Router();
+
+userRouter.post('/users/:id/cards/cardId', async (req, res, next) => {
+  
+});
 
 
 userRouter.get('/users', bearerAuth, async (req, res, next) => {
@@ -44,4 +48,4 @@ userRouter.put('/users/:id', async (req, res, next) => {
 //   }
 // });
 
-module.exports = {usersRouter};
+module.exports = {userRouter};

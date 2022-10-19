@@ -7,6 +7,7 @@ const express = require('express');
 // CUSTOM MIDDLEWARE
 const bearerAuth = require('./auth/middleware/bearer');
 const {basicAuth} = require('./auth/middleware/basic');
+const authUser = require('./users/userRoutes')
 const serverError = require('./error-handlers/500.js');
 const notFound = require('./error-handlers/404.js');
 
@@ -105,7 +106,7 @@ app.post('/signin', basicAuth, (req, res, next) => {
 
 // user PUT, GET, and DELETE routes:
 
-
+app.use(authUser);
 
 /**
  * SEPARATE THIS LATER TO A NEW MODULE. REST API LOGIC.
@@ -119,7 +120,9 @@ app.get('/cards/:id', async (req, res, next) => {
     console.error(err)
     serverError(err, req, res)
   }
-})
+});
+
+
 
 app.get('/cards', async (req, res, next) => {
   try {
