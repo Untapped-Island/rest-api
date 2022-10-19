@@ -64,7 +64,6 @@ app.post('/signup', async (req, res, next) => {
 });
 
 
-
 //define a signin route to returns user to client (confirm user auth)
 app.post('/signin', (req, res, next) => {
   try{
@@ -74,6 +73,10 @@ app.post('/signin', (req, res, next) => {
     next('signin error occurred');
   }
 });
+
+// user PUT, GET, and DELETE routes:
+
+
 
 /**
  * SEPARATE THIS LATER TO A NEW MODULE. REST API LOGIC.
