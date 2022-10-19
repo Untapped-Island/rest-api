@@ -34,14 +34,14 @@ userRouter.put('/users/:id', async (req, res, next) => {
   res.status(200).send(userUpdate);
 });
 
-userRouter/delete('/users/:id', async (req, res, next) => {
-  try{
-    let { id } = req.params;
-    let message = await usersSchema.delete(id)
-  }
-  catch(err){
-    next(err.message);
-  }
-});
+// userRouter/delete('/users/:id', async (req, res, next) => {
+//   try{
+//     let { id } = req.params;
+//     let message = await usersSchema.delete(id)
+//   }
+//   catch(err){
+//     next(err.message);
+//   }
+// });
 
 module.exports = {usersRouter};

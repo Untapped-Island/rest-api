@@ -1,6 +1,6 @@
 'use strict';
 
-const { userModel } = require('../models/usersSchema');
+const jwt = require('../../../utils/jwt.js')
 
 module.exports = async (req, res, next) => {
   if (!req.headers.authorization) {
@@ -13,16 +13,16 @@ module.exports = async (req, res, next) => {
         console.log('No access token provided')
         return next('Access token is required')
       }
-      console.log('from bearer middleware', token);
 
-      let validUser = userModel.authorization(token);
-      if (validUser) {
-        req.user = validUser;
+      await jwt.verifyAccessToken(token).then(user => {
+        req.user = user;
         next();
-      }
-    } catch (e) {
-      console.error(e);
-      next(e.message);
+      }).catch (err => {
+        next('Unauthorized...')
+      })
+    } catch (err) {
+      console.error(err);
+      next(err.message);
     }
   }
 };
