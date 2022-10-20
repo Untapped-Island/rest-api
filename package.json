@@ -10,7 +10,7 @@
     "db:create": "sequelize db:create",
     "watch": "NODE_ENV=development nodemon index.js",
     "test:watch": "NODE_ENV=test jest --watchAll",
-    "test": "NODE_ENV=test jest"
+    "test": "NODE_ENV=test jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -36,6 +36,9 @@
     "sqlite3": "^5.1.2"
   },
   "devDependencies": {
-    "prisma": "^4.5.0"
+    "jest": "^27.5.1",
+    "jest-mock-extended": "^2.0.4",
+    "prisma": "^4.5.0",
+    "supertest": "^6.3.0"
   }
 }
