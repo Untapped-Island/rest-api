@@ -8,16 +8,15 @@ app.use(express.json());
 require('dotenv').config();
 
 // middle
-const bearerAuth = require('../../src/auth/middleware/bearer');
+const bearerAuth = require('../../auth/middleware/bearer');
+
 // const { usersSchema } = require('../../src/auth/models/usersSchema');
 const { prisma } = require('.prisma/client');
-const userRouter = express.Router();
 
-// userRouter.post('/users/:username/cards/cardId', async (req, res, next) => {
-//   let userCards = await prisma.players.create();
-// });
 
-userRouter.get('/users', bearerAuth, async (req, res, next) => {
+
+
+app.get('/users', bearerAuth, async (req, res, next) => {
 
   try{
   let allUsers = await prisma.players.findAll();
@@ -31,12 +30,12 @@ catch(err){
 }
 });
 
-userRouter.get('/users/:id', async (req, res, next) => {
+app.get('/users/:id', async (req, res, next) => {
   try{
     let { id } = req.params;
     console.log('Checking for the id: ', id);
     
-    let user = await prisma.players.findOne({where: {id: req.params}});
+    let user = await prisma.players.findUnique({where: {id: req.params}});
     res.status(200).send(user);
   }
   catch(err){
@@ -44,7 +43,7 @@ userRouter.get('/users/:id', async (req, res, next) => {
   }
 });
 
-userRouter.put('/users/:id', async (req, res, next) => {
+app.put('/users/:id', async (req, res, next) => {
   try{
 
     let { id } = req.params;
@@ -57,7 +56,7 @@ userRouter.put('/users/:id', async (req, res, next) => {
 });
 
 
-userRouter.delete('/users/:id', async (req, res, next) => {
+app.delete('/users/:id', async (req, res, next) => {
   try{
 
     const { id } = req.params;
@@ -73,4 +72,4 @@ userRouter.delete('/users/:id', async (req, res, next) => {
   }
 });
 
-module.exports = {userRouter};
+module.exports = app;
