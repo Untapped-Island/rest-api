@@ -82,7 +82,7 @@ app.post('/signup', async (req, res, next) => {
       console.log(`User ${user.name} created successfully`);
       res.status(200).send({
         id: user.id,
-        username: user.name,
+        user: user.name,
         createdAt: user.createdAt,
         accessToken: accessToken
       });
