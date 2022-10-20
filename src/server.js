@@ -5,9 +5,10 @@ require('dotenv').config();
 const express = require('express');
 
 // CUSTOM MIDDLEWARE
-const authSigning = require('./router/authCreate/index');
+const authSigning = require('./router/authCreate/indexRoutes');
 const authCards = require('./router/cards/cardRoutes');
 const authUser = require('./router/users/userRoutes');
+const authPortfolio = require('./router/portfolio/portfolioRoutes');
 const serverError = require('./error-handlers/500.js');
 const notFound = require('./error-handlers/404.js');
 
@@ -29,6 +30,8 @@ app.use(express.json());
 app.use(authSigning);
 // cards route from router->cards
 app.use(authCards)
+// User-Portfolio route from router->portfolioRoutes
+app.use(authPortfolio);
 // routes to user from router->userRoutes:
 app.use(authUser);
 // Catch all routes
@@ -62,6 +65,3 @@ module.exports = {
  start:(PORT) => app.listen(PORT, '127.0.0.1', console.log('Server has started on: ', PORT))
  
 }
-// // User access Routes
-// app.use(authRouter);
-
