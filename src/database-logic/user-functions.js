@@ -14,11 +14,51 @@ async function addCardToProfileById(cardId, username) {
     },
     data: {
       Card: {
-        connect: { id: cardId }
+        create: { 
+          card: {
+            connect: {
+              id: cardId
+            }
+          }
+        }
       }
     }
   })
   return player
 }
 
-module.exports = { addCardToProfileById }
+async function getUserId(name){
+  const response = await prisma.player.findUnique({
+    where: {
+      name: name
+    },
+    select: {
+      id: true
+    }
+  })
+  return response.id
+}
+
+async function getUniqueCard(instanceId){
+  return await prisma.cardsOnPlayers.findUnique({
+    where: {
+      id: parseInt(instanceId)
+    }
+  })
+}
+
+async function deleteUniqueCard(instanceId){
+  await prisma.cardsOnPlayers.delete({
+    where: {
+      id: parseInt(instanceId)
+    }
+  })
+}
+
+
+module.exports = { 
+  addCardToProfileById,
+  getUserId, 
+  getUniqueCard,
+  deleteUniqueCard
+}
