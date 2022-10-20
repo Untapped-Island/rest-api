@@ -1,19 +1,17 @@
 'use strict';
 
 const express = require('express');
-const cors = require('cors');
-const app = express();
-app.use(cors());
-app.use(express.json());
+
 require('dotenv').config();
 
+const userRouter = express.Router();
 // middle
 const bearerAuth = require('../../auth/middleware/bearer');
 
 // const { usersSchema } = require('../../src/auth/models/usersSchema');
 const { prisma } = require('.prisma/client');
 
-app.get('/users', bearerAuth, async (req, res, next) => {
+userRouter.get('/users', bearerAuth, async (req, res, next) => {
 
   try{
   let allUsers = await prisma.players.findAll();
@@ -28,7 +26,7 @@ catch(err){
 });
 
 // bearer auth implemented, check users by conditional
-app.put('/users/:username', bearerAuth, async (req, res, next) => {
+userRouter.put('/users/:username', bearerAuth, async (req, res, next) => {
   try{
 
     let { id } = req.params;
@@ -41,7 +39,7 @@ app.put('/users/:username', bearerAuth, async (req, res, next) => {
 });
 
 // bearer auth implemented, check users by conditional
-app.delete('/users/:username', bearerAuth, async (req, res, next) => {
+userRouter.delete('/users/:username', bearerAuth, async (req, res, next) => {
   try{
 
     const { id } = req.params;
@@ -57,4 +55,4 @@ app.delete('/users/:username', bearerAuth, async (req, res, next) => {
   }
 });
 
-module.exports = app;
+module.exports = userRouter;

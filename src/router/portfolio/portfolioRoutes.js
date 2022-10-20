@@ -3,12 +3,11 @@
 require('dotenv').config();
 
 const express = require('express');
-const app = express();
-const cors = require('cors');
 
+const portfolioRouter = express.Router();
 // USE MIDDLEWARE IN ALL ROUTES
-app.use(cors());
-app.use(express.json());
+
+
 
 const bearerAuth = require('../../auth/middleware/bearer');
 
@@ -22,7 +21,7 @@ const {
 const prisma = require('../../database-logic/prisma-client.js');
 
 
-app.get('/users/:username', bearerAuth, async (req, res, next) => {
+portfolioRouter.get('/users/:username', bearerAuth, async (req, res, next) => {
   // const foundUser = await getUserByUsername(req.params.username) // TODO - Write this function...
   const foundUser = await prisma.player.findUnique({
     where: {
@@ -41,7 +40,7 @@ app.get('/users/:username', bearerAuth, async (req, res, next) => {
   }
 }) 
 
-app.get('/users/:username/cards', bearerAuth, async (req, res, next) => {
+portfolioRouter.get('/users/:username/cards', bearerAuth, async (req, res, next) => {
   try {
     const cards = await getCardsByFilter(req.query, req.params.username)
     res.status(200).send(cards)
@@ -51,7 +50,7 @@ app.get('/users/:username/cards', bearerAuth, async (req, res, next) => {
   }
 })
 
-app.post('/users/:username/cards', bearerAuth, async (req, res, next) => {
+portfolioRouter.post('/users/:username/cards', bearerAuth, async (req, res, next) => {
   try {
     console.log(req.params.username)
     console.log(req.user.payload)
@@ -76,7 +75,7 @@ app.post('/users/:username/cards', bearerAuth, async (req, res, next) => {
   }
 })
 
-app.get('/users/:username/cards/:instanceId', bearerAuth, async (req, res, next) => {
+portfolioRouter.get('/users/:username/cards/:instanceId', bearerAuth, async (req, res, next) => {
   try {
     // Place the user id on the request using the JWT so we don't have to do this.
     const userId = await getUserId(req.params.username);
@@ -95,7 +94,7 @@ app.get('/users/:username/cards/:instanceId', bearerAuth, async (req, res, next)
   }
 })
 
-app.delete('/users/:username/cards/:instanceId', bearerAuth, async (req, res, next) => {
+portfolioRouter.delete('/users/:username/cards/:instanceId', bearerAuth, async (req, res, next) => {
   try {
     if (req.params.username === req.user.payload) {
       // Place the user id on the request using the JWT so we don't have to do this.
@@ -116,11 +115,11 @@ app.delete('/users/:username/cards/:instanceId', bearerAuth, async (req, res, ne
   }
 });
 
-app.get('/jwtProtect', bearerAuth, async (req, res, next) => {
+portfolioRouter.get('/jwtProtect', bearerAuth, async (req, res, next) => {
   res.status(200).send(req.user.payload)
 });
 
 
 
-module.exports = app;
+module.exports = portfolioRouter;
 
