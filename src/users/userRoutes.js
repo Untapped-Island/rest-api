@@ -18,36 +18,59 @@ const userRouter = express.Router();
 // });
 
 userRouter.get('/users', bearerAuth, async (req, res, next) => {
+
+  try{
   let allUsers = await prisma.players.findAll();
   let payload = {
     results: allUsers,
   };
   res.status(200).send(payload);
+}
+catch(err){
+  next('User error occurred');
+}
 });
 
 userRouter.get('/users/:id', async (req, res, next) => {
-  let { id } = req.params;
-  console.log('Checking for the id: ', id);
-
-  let user = await prisma.players.findOne({where: {id: req.params}});
-  res.status(200).send(user);
+  try{
+    let { id } = req.params;
+    console.log('Checking for the id: ', id);
+    
+    let user = await prisma.players.findOne({where: {id: req.params}});
+    res.status(200).send(user);
+  }
+  catch(err){
+    next('user not found');
+  }
 });
 
 userRouter.put('/users/:id', async (req, res, next) => {
-  let { id } = req.params;
-  let userUpdate = await prisma.players.update(req.body, id);
-  res.status(200).send('update successful: ',userUpdate);
+  try{
+
+    let { id } = req.params;
+    let userUpdate = await prisma.players.update(req.body, id);
+    res.status(200).send('update successful: ',userUpdate);
+  }
+  catch(err){
+    next('update error occurred');
+  }
 });
 
 
 userRouter.delete('/users/:id', async (req, res, next) => {
-  const { id } = req.params;
-  const post = await prisma.player.delete({
-    where: {
-      id: id,
-    },
-  });
-  res.status(200).send('user deleted')
+  try{
+
+    const { id } = req.params;
+    const post = await prisma.player.delete({
+      where: {
+        id: id,
+      },
+    });
+    res.status(200).send('user deleted')
+  }
+  catch(err){
+    next('Delete error occurred')
+  }
 });
 
-module.exports = userRouter;
+module.exports = {userRouter};
