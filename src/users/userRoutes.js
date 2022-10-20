@@ -1,23 +1,24 @@
 'use strict';
 
 const express = require('express');
-const bearerAuth = require('../../src/auth/middleware/bearer');
-// const basicAuth = require('./auth/middleware/basic')
-const { usersSchema } = require('../../src/auth/models/usersSchema');
-const app = express();
 const cors = require('cors');
+const app = express();
 app.use(cors());
 app.use(express.json());
 require('dotenv').config();
+
+// middle
+const bearerAuth = require('../../src/auth/middleware/bearer');
+// const { usersSchema } = require('../../src/auth/models/usersSchema');
+const { prisma } = require('.prisma/client');
 const userRouter = express.Router();
 
-userRouter.post('/users/:id/cards/cardId', async (req, res, next) => {
-  
-});
-
+// userRouter.post('/users/:username/cards/cardId', async (req, res, next) => {
+//   let userCards = await prisma.players.create();
+// });
 
 userRouter.get('/users', bearerAuth, async (req, res, next) => {
-  let allUsers = await usersSchema.findAll();
+  let allUsers = await prisma.players.findAll();
   let payload = {
     results: allUsers,
   };
@@ -28,24 +29,25 @@ userRouter.get('/users/:id', async (req, res, next) => {
   let { id } = req.params;
   console.log('Checking for the id: ', id);
 
-  let user = await usersSchema.findOne({where: {id: req.params}});
+  let user = await prisma.players.findOne({where: {id: req.params}});
   res.status(200).send(user);
 });
 
 userRouter.put('/users/:id', async (req, res, next) => {
   let { id } = req.params;
-  let userUpdate = await usersSchema.update(req.body, id);
-  res.status(200).send(userUpdate);
+  let userUpdate = await prisma.players.update(req.body, id);
+  res.status(200).send('update successful: ',userUpdate);
 });
 
-// userRouter/delete('/users/:id', async (req, res, next) => {
-//   try{
-//     let { id } = req.params;
-//     let message = await usersSchema.delete(id)
-//   }
-//   catch(err){
-//     next(err.message);
-//   }
-// });
 
-module.exports = {userRouter};
+userRouter.delete('/users/:id', async (req, res, next) => {
+  const { id } = req.params;
+  const post = await prisma.player.delete({
+    where: {
+      id: id,
+    },
+  });
+  res.status(200).send('user deleted')
+});
+
+module.exports = userRouter;
