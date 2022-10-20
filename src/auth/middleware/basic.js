@@ -38,5 +38,5 @@ async function basicAuth(req, res, next) {
     }
   }
 }
-module.exports = {basicAuth};
+module.exports = basicAuth;
 

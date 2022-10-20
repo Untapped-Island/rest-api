@@ -1,7 +1,7 @@
 "use strict";
 
 const express = require('express');
-const {basicAuth} = require('../../auth/middleware/basic')
+const basicAuth = require('../../auth/middleware/basic')
 const { 
   addCardToProfileById,
 } = require('../../database-logic/user-functions')
