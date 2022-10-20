@@ -22,7 +22,7 @@ const {
   addCardToProfileById,
   getUserId,
   getUniqueCard,
-  deleteCardFromPortfolio
+  deleteUniqueCard
 } = require('./database-logic/user-functions')
 
 const prisma = require('./database-logic/prisma-client.js');
