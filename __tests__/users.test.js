@@ -5,7 +5,7 @@ const { app } = require('../src/server');
 const mockRequest = supertest(app);
 
 let userData = {
-  username: 'user5',
+  username: 'user6',
   password: 'test',
 };
 let accessToken = null;
@@ -13,6 +13,7 @@ let accessToken = null;
 describe('User Routes', () => {
   test('Can create a new user', async () => {
     const response = await mockRequest.post('/signup').send(userData);
+    userData.id = response.body.id;
     
     expect(response.status).toEqual(201);
     expect(response.body.id).toBeDefined();
@@ -33,6 +34,7 @@ describe('User Routes', () => {
 
   test('Can sign in to an existing user', async () => {
     const response = await mockRequest.post('/signin').auth(userData.username, userData.password);
+    userData.token = response.body.accessToken;
 
     expect(response.status).toEqual(200);
     expect(response.body.accessToken).toBeDefined();
@@ -53,4 +55,17 @@ describe('User Routes', () => {
     expect(responsePass.body.message).toEqual('Invalid username or password');
   })
 
+  test('Get all users', async () => {
+    const userList = await mockRequest.get('/users').set('Authorization', `Bearer ${userData.token}`);
+    const lastUser = userList.length - 1;
+    
+    expect(response.status).toEqual(200);
+    expect(response.body[lastUser].name).toEqual(userData.username);
+  })
+  test('Get one user', async () => {
+    const response = await mockRequest.get(`/users/${userData.username}`).set('Authorization', `Bearer ${userData.token}`);
+    
+    expect(response.status).toEqual(200);
+    expect(response.body.name).toEqual(userData.username);
+  })
 })
