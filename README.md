@@ -12,6 +12,16 @@
 ## Documentation
 <!-- What does this repository do? Is there anything the user needs to do? Is there an end-user? -->
 
+- Create a `.env` file in the root directory of the cloned repository. Place the following line inside the file.
+  
+  ```
+    DATABASE_URL=postgresql://<username>:<password>@localhost:5432/mtgdb?schema=public
+    PORT=<port#>
+    ACCESS_TOKEN_SECRET=<Secret>
+  ```
+
+  _Note that you will need to have Postgres running on your local machine for this to work. Use an existing username and password (if necessary) in place of the bracketed values, and the migrate command will take care of the rest._
+
 ### MVP
 
 User Signs in to the terminal and inputs data through a series of questions, 

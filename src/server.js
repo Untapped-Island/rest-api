@@ -22,7 +22,7 @@ const {
   addCardToProfileById,
   getUserId,
   getUniqueCard,
-  deleteCardFromPortfolio
+  deleteUniqueCard
 } = require('./database-logic/user-functions')
 
 const prisma = require('./database-logic/prisma-client.js');
@@ -112,7 +112,7 @@ app.post('/signin', basicAuth, (req, res, next) => {
 
 // user PUT, GET, and DELETE routes:
 
-app.use(authUser);
+// app.use(authUser);
 
 /**
  * SEPARATE THIS LATER TO A NEW MODULE. REST API LOGIC.
