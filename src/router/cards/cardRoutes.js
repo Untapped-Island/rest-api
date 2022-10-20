@@ -3,12 +3,9 @@
 require('dotenv').config();
 
 const express = require('express');
-const app = express();
-const cors = require('cors');
 
+const cardRouter = express.Router();
 // USE MIDDLEWARE IN ALL ROUTES
-app.use(cors());
-app.use(express.json());
 
 // const bearerAuth = require('../../auth/middleware/bearer');
 
@@ -18,7 +15,7 @@ const {
 } = require('../../database-logic/get-card-functions');
 
 
-  app.get('/cards/:id', async (req, res, next) => {
+  cardRouter.get('/cards/:id', async (req, res, next) => {
     try {
       const card = await getOneCardById(req.params.id)
       res.status(200).send(card)
@@ -30,7 +27,7 @@ const {
 
 
 
-app.get('/cards', async (req, res, next) => {
+cardRouter.get('/cards', async (req, res, next) => {
   try {
     const cards = await getCardsByFilter(req.query)
     res.status(200).send(cards)
@@ -41,4 +38,4 @@ app.get('/cards', async (req, res, next) => {
 })
 
 
-module.exports = app;
+module.exports = cardRouter;

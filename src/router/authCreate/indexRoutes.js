@@ -1,5 +1,4 @@
 "use strict";
-
 const express = require('express');
 const basicAuth = require('../../auth/middleware/basic')
 const { 
@@ -11,22 +10,18 @@ const bcrypt = require('bcrypt');
 const jwt = require('../../../utils/jwt.js');
 
 // INSTANTIATE EXPRESS AND CORS
-const app = express();
-const cors = require('cors');
-
+const indexRouter = express.Router();
 // USE MIDDLEWARE IN ALL ROUTES
-app.use(cors());
-app.use(express.json());
 
 
 // const PORT = process.env || 3002
-app.get('/userWelcome', (req, res) => {
+indexRouter.get('/userWelcome', (req, res) => {
   res.status(200).send(`User Build.`);
 })
 
 
 
-  app.post('/signup', async (req, res, next) => {
+  indexRouter.post('/signup', async (req, res, next) => {
     try {
     let { username, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -68,7 +63,7 @@ app.get('/userWelcome', (req, res) => {
 
 
 //define a signin route to returns user to client (confirm user auth)
-app.post('/signin', basicAuth, (req, res, next) => {
+indexRouter.post('/signin', basicAuth, (req, res, next) => {
   try {
 
     res.status(200).send({
@@ -82,7 +77,7 @@ app.post('/signin', basicAuth, (req, res, next) => {
 });
 
 
-module.exports = app;
+module.exports = indexRouter;
 
 
 
