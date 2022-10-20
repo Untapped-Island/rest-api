@@ -112,7 +112,7 @@ app.post('/signin', basicAuth, (req, res, next) => {
 
 // user PUT, GET, and DELETE routes:
 
-app.use(authUser);
+// app.use(authUser);
 
 /**
  * SEPARATE THIS LATER TO A NEW MODULE. REST API LOGIC.
