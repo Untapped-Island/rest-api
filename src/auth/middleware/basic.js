@@ -30,12 +30,13 @@ async function basicAuth(req, res, next) {
       // console.log('validUser', validUser);
       if (validUser) {
         req.user = user.name;
+        req.userId = user.id;
         req.accessToken = await jwt.signAccessToken(user.name);
         next();
       } else {
         next('Invalid username or password');
       }
-    }
+    } else next('Invalid username or password');
   }
 }
 module.exports = {basicAuth};

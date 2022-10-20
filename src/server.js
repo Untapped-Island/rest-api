@@ -76,13 +76,14 @@ app.post('/signup', async (req, res, next) => {
       })
       const accessToken = await jwt.signAccessToken({
         user: user.name,
+        user: user.id
       })
       addCardToProfileById("12cc97ec-5d03-4434-a31b-51e77d208466", user.name) //inquirer ---
       addCardToProfileById("04aa210a-235f-4e07-87d1-0d28cdf6888b", user.name)
       console.log(`User ${user.name} created successfully`);
       res.status(200).send({
-        id: user.id,
-        username: user.name,
+        userId: user.id,
+        user: user.name,
         createdAt: user.createdAt,
         accessToken: accessToken
       });
@@ -95,13 +96,11 @@ app.post('/signup', async (req, res, next) => {
   }
 });
 
-
-//define a signin route to returns user to client (confirm user auth)
 app.post('/signin', basicAuth, (req, res, next) => {
   try {
-
     res.status(200).send({
       user: req.user,
+      userId: req.userId,
       accessToken: req.accessToken
     });
   }
@@ -130,7 +129,7 @@ app.get('/cards/:id', async (req, res, next) => {
 
 
 
-app.get('/cards', async (req, res, next) => {
+app.get('/cards', bearerAuth, async (req, res, next) => {
   try {
     const cards = await getCardsByFilter(req.query)
     res.status(200).send(cards)
