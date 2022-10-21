@@ -14,8 +14,9 @@ module.exports = async (req, res, next) => {
         return next('Access token is required')
       }
 
-      await jwt.verifyAccessToken(token).then(user => {
-        req.user = user;
+      await jwt.verifyAccessToken(token).then(token => {
+        req.user = token.payload.user;
+        req.userId = token.payload.userId
         next();
       }).catch (err => {
         next('Unauthorized...')

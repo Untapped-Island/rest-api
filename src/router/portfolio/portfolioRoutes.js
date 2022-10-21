@@ -7,8 +7,6 @@ const express = require('express');
 const portfolioRouter = express.Router();
 // USE MIDDLEWARE IN ALL ROUTES
 
-
-
 const bearerAuth = require('../../auth/middleware/bearer');
 
 const { 
@@ -29,7 +27,7 @@ portfolioRouter.get('/users/:username', bearerAuth, async (req, res, next) => {
     }
   })
   if (foundUser) {
-    if (req.user.payload === foundUser.name) {
+    if (req.user === foundUser.name) {
       console.log('Hey, this is you')
     } else {
       console.log(`Found user ${foundUser.name}. Is this your friend?`)
@@ -53,14 +51,14 @@ portfolioRouter.get('/users/:username/cards', bearerAuth, async (req, res, next)
 portfolioRouter.post('/users/:username/cards', bearerAuth, async (req, res, next) => {
   try {
     console.log(req.params.username)
-    console.log(req.user.payload)
-    if (req.params.username === req.user.payload) {
+    console.log(req.user)
+    if (req.params.username === req.user) {
       if (req.body.card) {
-        await addCardToProfileById(req.body.card, req.user.payload)
+        await addCardToProfileById(req.body.card, req.user)
       } 
       else if (req.body.cards) {
         for (let card of req.body.cards) {
-          await addCardToProfileById(card, req.user.payload)
+          await addCardToProfileById(card, req.user)
         }
       }
     } else {
@@ -96,7 +94,7 @@ portfolioRouter.get('/users/:username/cards/:instanceId', bearerAuth, async (req
 
 portfolioRouter.delete('/users/:username/cards/:instanceId', bearerAuth, async (req, res, next) => {
   try {
-    if (req.params.username === req.user.payload) {
+    if (req.params.username === req.user) {
       // Place the user id on the request using the JWT so we don't have to do this.
       const userId = await getUserId(req.params.username);
       const card = await getUniqueCard(req.params.instanceId);
@@ -115,11 +113,4 @@ portfolioRouter.delete('/users/:username/cards/:instanceId', bearerAuth, async (
   }
 });
 
-portfolioRouter.get('/jwtProtect', bearerAuth, async (req, res, next) => {
-  res.status(200).send(req.user.payload)
-});
-
-
-
 module.exports = portfolioRouter;
-

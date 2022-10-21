@@ -41,14 +41,13 @@ indexRouter.get('/userWelcome', (req, res) => {
         }
       })
       const accessToken = await jwt.signAccessToken({
+        userId: user.id,
         user: user.name,
       })
-      addCardToProfileById("12cc97ec-5d03-4434-a31b-51e77d208466", user.name) //inquirer ---
-      addCardToProfileById("04aa210a-235f-4e07-87d1-0d28cdf6888b", user.name)
       console.log(`User ${user.name} created successfully`);
       res.status(200).send({
-        id: user.id,
-        username: user.name,
+        userId: user.id,
+        user: user.name,
         createdAt: user.createdAt,
         accessToken: accessToken
       });
@@ -65,8 +64,8 @@ indexRouter.get('/userWelcome', (req, res) => {
 //define a signin route to returns user to client (confirm user auth)
 indexRouter.post('/signin', basicAuth, (req, res, next) => {
   try {
-
     res.status(200).send({
+      userId: req.userId,
       user: req.user,
       accessToken: req.accessToken
     });
