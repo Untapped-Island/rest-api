@@ -24,7 +24,7 @@
 
 ### MVP
 
-User Signs in to the terminal and inputs data through a series of questions, 
+User Signs in to the terminal and inputs data through a series of questions,
 Data is stored in the queue, along with third Party APIs that are aligned with the questions.
 Terminal acts like the Client Application
 
