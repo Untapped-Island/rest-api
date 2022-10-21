@@ -6,7 +6,6 @@ const express = require('express');
 
 const cardRouter = express.Router();
 // USE MIDDLEWARE IN ALL ROUTES
-
 // const bearerAuth = require('../../auth/middleware/bearer');
 
 const { 
@@ -21,7 +20,7 @@ const {
       res.status(200).send(card)
   } catch (err) {
     console.error(err)
-    serverError(err, req, res)
+    next(err)
   }
 });
 
@@ -32,7 +31,7 @@ cardRouter.get('/cards', async (req, res, next) => {
     res.status(200).send(cards)
   } catch (err) {
     console.error(err)
-    serverError(err, req, res)
+    next(err)
   }
 })
 
