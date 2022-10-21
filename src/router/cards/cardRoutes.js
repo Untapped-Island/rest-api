@@ -26,7 +26,6 @@ const {
 });
 
 
-
 cardRouter.get('/cards', async (req, res, next) => {
   try {
     const cards = await getCardsByFilter(req.query)

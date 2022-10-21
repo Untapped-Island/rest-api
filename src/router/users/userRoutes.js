@@ -12,6 +12,7 @@ const bcrypt = require('bcrypt');
 const prisma = require('../../database-logic/prisma-client');
 const jwt = require('../../../utils/jwt');
 
+
 userRouter.get('/users', bearerAuth, async (req, res, next) => {
 
   try {
