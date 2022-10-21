@@ -16,6 +16,10 @@ const {
   deleteUniqueCard
 } = require('../../database-logic/user-functions')
 
+const { 
+  getCardsByFilter,
+} = require('../../database-logic/get-card-functions');
+
 const prisma = require('../../database-logic/prisma-client.js');
 
 
