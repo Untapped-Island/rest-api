@@ -11,13 +11,13 @@ const portfolioRouter = express.Router();
 
 const bearerAuth = require('../../auth/middleware/bearer');
 
-const { 
+const {
   addCardToProfileById,
   getUserId,
   getUniqueCard,
-  deleteUniqueCard
+  deleteUniqueCard,
 } = require('../../database-logic/user-functions')
-
+const { getCardsByFilter } = require('../../database-logic/get-card-functions')
 const prisma = require('../../database-logic/prisma-client.js');
 
 
@@ -38,7 +38,7 @@ portfolioRouter.get('/users/:username', bearerAuth, async (req, res, next) => {
   } else {
     next(`User ${req.params.username} not found.`)
   }
-}) 
+})
 
 portfolioRouter.get('/users/:username/cards', bearerAuth, async (req, res, next) => {
   try {
@@ -53,25 +53,25 @@ portfolioRouter.get('/users/:username/cards', bearerAuth, async (req, res, next)
 portfolioRouter.post('/users/:username/cards', bearerAuth, async (req, res, next) => {
   try {
     console.log(req.params.username)
-    console.log(req.user.payload)
-    if (req.params.username === req.user.payload) {
+    console.log(req.user)
+    if (req.params.username === req.user) {
       if (req.body.card) {
-        await addCardToProfileById(req.body.card, req.user.payload)
-      } 
+        await addCardToProfileById(req.body.card, req.user)
+      }
       else if (req.body.cards) {
         for (let card of req.body.cards) {
-          await addCardToProfileById(card, req.user.payload)
+          await addCardToProfileById(card, req.user)
         }
       }
     } else {
       return res.status(401).send('Cannot add card to a portfolio that you do not own.')
-     
+
     }
 
     res.status(200).send('added')
   } catch (err) {
     console.error(err);
-    next(err);    
+    next(err);
   }
 })
 
@@ -96,7 +96,7 @@ portfolioRouter.get('/users/:username/cards/:instanceId', bearerAuth, async (req
 
 portfolioRouter.delete('/users/:username/cards/:instanceId', bearerAuth, async (req, res, next) => {
   try {
-    if (req.params.username === req.user.payload) {
+    if (req.params.username === req.user) {
       // Place the user id on the request using the JWT so we don't have to do this.
       const userId = await getUserId(req.params.username);
       const card = await getUniqueCard(req.params.instanceId);

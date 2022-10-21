@@ -56,10 +56,9 @@ describe('User Routes', () => {
 
   test('Get all users', async () => {
     const userList = await mockRequest.get('/users').set('Authorization', `Bearer ${userData.token}`);
-    const lastUser = userList.body.results.length - 1;
 
     expect(userList.status).toEqual(200);
-    expect(userList.body.results[lastUser].name).toEqual(userData.username);
+    expect(userList.body.results[0].name).toBeDefined();
   })
   test('Get one user', async () => {
     const response = await mockRequest.get(`/users/${userData.username}`).set('Authorization', `Bearer ${userData.token}`);
