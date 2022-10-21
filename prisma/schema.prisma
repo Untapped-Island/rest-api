@@ -1,0 +1,58 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Card {
+  id            String           @id
+  name          String           @unique
+  fullType      String
+  power         Float?
+  toughness     Float?
+  manaCost      String?
+  manaValue     Float
+  colors        Int
+  colorIdentity Int
+  formats       Int
+  Player        CardsOnPlayers[]
+  SubType       SubType[]
+  SuperType     SuperType[]
+  Type          Type[]
+}
+
+model Player {
+  id        Int              @id @default(autoincrement())
+  name      String           @unique
+  password  String
+  createdAt DateTime         @default(now())
+  Card      CardsOnPlayers[]
+}
+
+model CardsOnPlayers {
+  cardId   String
+  playerId Int
+  isFoil   Boolean @default(false)
+  id       Int     @id @default(autoincrement())
+  card     Card    @relation(fields: [cardId], references: [id])
+  player   Player  @relation(fields: [playerId], references: [id])
+}
+
+model SubType {
+  id   String @id
+  Card Card[]
+}
+
+model SuperType {
+  id   String @id
+  Card Card[]
+}
+
+model Type {
+  id   String @id
+  Card Card[]
+}
