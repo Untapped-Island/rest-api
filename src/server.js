@@ -75,6 +75,7 @@ app.post('/signup', async (req, res, next) => {
         }
       })
       const accessToken = await jwt.signAccessToken({
+        userId: user.id,
         user: user.name,
         user: user.id
       })
@@ -99,6 +100,7 @@ app.post('/signup', async (req, res, next) => {
 app.post('/signin', basicAuth, (req, res, next) => {
   try {
     res.status(200).send({
+      userId: req.userId,
       user: req.user,
       userId: req.userId,
       accessToken: req.accessToken
@@ -147,7 +149,7 @@ app.get('/users/:username', bearerAuth, async (req, res, next) => {
     }
   })
   if (foundUser) {
-    if (req.user.payload === foundUser.name) {
+    if (req.user === foundUser.name) {
       console.log('Hey, this is you')
     } else {
       console.log(`Found user ${foundUser.name}. Is this your friend?`)
@@ -171,14 +173,14 @@ app.get('/users/:username/cards', bearerAuth, async (req, res, next) => {
 app.post('/users/:username/cards', bearerAuth, async (req, res, next) => {
   try {
     console.log(req.params.username)
-    console.log(req.user.payload)
-    if (req.params.username === req.user.payload) {
+    console.log(req.user)
+    if (req.params.username === req.user) {
       if (req.body.card) {
-        await addCardToProfileById(req.body.card, req.user.payload)
+        await addCardToProfileById(req.body.card, req.user)
       } 
       else if (req.body.cards) {
         for (let card of req.body.cards) {
-          await addCardToProfileById(card, req.user.payload)
+          await addCardToProfileById(card, req.user)
         }
       }
     } else {
@@ -214,7 +216,7 @@ app.get('/users/:username/cards/:instanceId', bearerAuth, async (req, res, next)
 
 app.delete('/users/:username/cards/:instanceId', bearerAuth, async (req, res, next) => {
   try {
-    if (req.params.username === req.user.payload) {
+    if (req.params.username === req.user) {
       // Place the user id on the request using the JWT so we don't have to do this.
       const userId = await getUserId(req.params.username);
       const card = await getUniqueCard(req.params.instanceId);
@@ -234,7 +236,7 @@ app.delete('/users/:username/cards/:instanceId', bearerAuth, async (req, res, ne
 })
 
 app.get('/jwtProtect', bearerAuth, async (req, res, next) => {
-  res.status(200).send(req.user.payload)
+  res.status(200).send(req.user)
 })
 
 app.use(serverError)

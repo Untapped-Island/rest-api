@@ -29,9 +29,12 @@ async function basicAuth(req, res, next) {
       let validUser = await bcrypt.compare(password, user.password);
       // console.log('validUser', validUser);
       if (validUser) {
+        req.userId = user.id
         req.user = user.name;
-        req.userId = user.id;
-        req.accessToken = await jwt.signAccessToken(user.name);
+        req.accessToken = await jwt.signAccessToken({
+          userId: user.id,
+          user: user.name
+        });
         next();
       } else {
         next('Invalid username or password');
