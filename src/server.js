@@ -40,28 +40,7 @@ app.use(notFound);
 
 // admin function
 
-
-
-// const result = await prisma.card.findMany({
-  //   where: {
-    //     AND: [
-//       {
-//         name: {
-//           search: 'swamp',
-//         },
-//       },
-//       {
-  //         fullType: {
-//           contains: 'Basic Land',
-//         },
-//       },
-//     ],
-//   },
-// })
-// console.log(result)
-// }
-
 module.exports = {
- start:(PORT) => app.listen(PORT, '127.0.0.1', console.log('Server has started on: ', PORT))
- 
+ start:(PORT) => app.listen(PORT, '127.0.0.1', console.log('Server has started on: ', PORT)),
+ app
 }

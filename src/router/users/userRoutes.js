@@ -7,50 +7,66 @@ require('dotenv').config();
 const userRouter = express.Router();
 // middle
 const bearerAuth = require('../../auth/middleware/bearer');
+const bcrypt = require('bcrypt');
 
-// const { usersSchema } = require('../../src/auth/models/usersSchema');
-const { prisma } = require('.prisma/client');
+const prisma = require('../../database-logic/prisma-client');
+const jwt = require('../../../utils/jwt');
 
 userRouter.get('/users', bearerAuth, async (req, res, next) => {
 
-  try{
-  let allUsers = await prisma.players.findAll();
-  let payload = {
-    results: allUsers,
-  };
-  res.status(200).send(payload);
-}
-catch(err){
-  next('User error occurred');
-}
+  try {
+    let allUsers = await prisma.player.findMany();
+    let payload = {
+      results: allUsers,
+    };
+    res.status(200).send(payload);
+  }
+  catch (err) {
+    next('User error occurred');
+  }
 });
 
 // bearer auth implemented, check users by conditional
 userRouter.put('/users/:username', bearerAuth, async (req, res, next) => {
-  try{
-
-    let { id } = req.params;
-    let userUpdate = await prisma.players.update(req.body, id);
-    res.status(200).send('update successful: ', userUpdate);
+  if (req.user.payload !== req.params.username) next('Cannot edit an account you do not own')
+  try {
+    let prismaQuery = {
+      data: {
+        name: req.body.username,
+        password: await bcrypt.hash(req.body.password, 10)
+      },
+      where: {
+        name: req.params.username
+      }
+    }
+    let userUpdate = await prisma.player.update(prismaQuery);
+    let newToken = await jwt.signAccessToken(userUpdate.name)
+    res.status(200).send({
+      username: userUpdate.name,
+      accessToken: newToken
+    });
   }
-  catch(err){
+  catch (err) {
+    console.log(err)
     next('update error occurred');
   }
 });
 
 // bearer auth implemented, check users by conditional
 userRouter.delete('/users/:username', bearerAuth, async (req, res, next) => {
-  try{
-
-    const { id } = req.params;
+  const { username } = req.params;
+  if (req.user.payload !== username) next('Cannot delete an account you do not own')
+  try {
     const post = await prisma.player.delete({
       where: {
-        id: id,
+        name: username,
       },
     });
-    res.status(200).send('user deleted')
+    console.log(post)
+    res.status(200).send(`${post.name} deleted`)
   }
-  catch(err){
+  catch (err) {
+    console.log(err)
     next('Delete error occurred')
   }
 });
