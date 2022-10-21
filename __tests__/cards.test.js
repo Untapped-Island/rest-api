@@ -44,7 +44,7 @@ describe('card routes', () => {
     let response = await mockRequest.post(`/users/${userData.username}/cards`).set('Authorization', `Bearer ${userData.accessToken}`).send({card: '01800a0c-ad93-4e45-a904-38253a143638'})
 
     expect(response.status).toEqual(200)
-    expect(response.text).toEqual('added')
+    expect(response.body.name).toEqual('Zodiac Goat')
   })
   test('Get a card from a users portfolio', async () => {
     let response = await mockRequest.get(`/users/${userData.username}/cards`).set('Authorization', `Bearer ${userData.accessToken}`)

@@ -7,8 +7,6 @@ const express = require('express');
 const portfolioRouter = express.Router();
 // USE MIDDLEWARE IN ALL ROUTES
 
-
-
 const bearerAuth = require('../../auth/middleware/bearer');
 
 const {
@@ -17,7 +15,11 @@ const {
   getUniqueCard,
   deleteUniqueCard,
 } = require('../../database-logic/user-functions')
-const { getCardsByFilter } = require('../../database-logic/get-card-functions')
+
+const { 
+  getCardsByFilter,
+} = require('../../database-logic/get-card-functions');
+
 const prisma = require('../../database-logic/prisma-client.js');
 
 
@@ -29,7 +31,7 @@ portfolioRouter.get('/users/:username', bearerAuth, async (req, res, next) => {
     }
   })
   if (foundUser) {
-    if (req.user.payload === foundUser.name) {
+    if (req.user === foundUser.name) {
       console.log('Hey, this is you')
     } else {
       console.log(`Found user ${foundUser.name}. Is this your friend?`)
@@ -52,23 +54,22 @@ portfolioRouter.get('/users/:username/cards', bearerAuth, async (req, res, next)
 
 portfolioRouter.post('/users/:username/cards', bearerAuth, async (req, res, next) => {
   try {
-    console.log(req.params.username)
-    console.log(req.user)
     if (req.params.username === req.user) {
       if (req.body.card) {
-        await addCardToProfileById(req.body.card, req.user)
-      }
-      else if (req.body.cards) {
-        for (let card of req.body.cards) {
-          await addCardToProfileById(card, req.user)
-        }
-      }
+        const card = await addCardToProfileById(req.body.card, req.user)
+        console.log(card)
+        res.status(200).send(card)
+      } 
+      // Expand this later to allow users to add multiple cards to their account using an array of card id's
+      // else if (req.body.cards) {
+      //   for (let card of req.body.cards) {
+      //     await addCardToProfileById(card, req.user)
+      //   }
+      // }
     } else {
       return res.status(401).send('Cannot add card to a portfolio that you do not own.')
 
     }
-
-    res.status(200).send('added')
   } catch (err) {
     console.error(err);
     next(err);
@@ -115,11 +116,4 @@ portfolioRouter.delete('/users/:username/cards/:instanceId', bearerAuth, async (
   }
 });
 
-portfolioRouter.get('/jwtProtect', bearerAuth, async (req, res, next) => {
-  res.status(200).send(req.user.payload)
-});
-
-
-
 module.exports = portfolioRouter;
-

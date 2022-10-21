@@ -15,8 +15,8 @@ describe('User Routes', () => {
     userData.id = response.body.id;
 
     expect(response.status).toEqual(201);
-    expect(response.body.id).toBeDefined();
-    expect(response.body.username).toEqual(userData.username);
+    expect(response.body.userId).toBeDefined();
+    expect(response.body.user).toEqual(userData.username);
   })
   test('Fail to create a new user with no password', async () => {
     const response = await mockRequest.post('/signup').send({ username: 'fail' });
@@ -37,7 +37,7 @@ describe('User Routes', () => {
 
     expect(response.status).toEqual(200);
     expect(response.body.accessToken).toBeDefined();
-    expect(response.body.username).toEqual(userData.username);
+    expect(response.body.user).toEqual(userData.username);
   })
   test('Fail to sign in to an existing user with no authorization information', async () => {
     const responseName = await mockRequest.post('/signin');

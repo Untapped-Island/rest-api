@@ -30,7 +30,6 @@ cardRouter.get('/cards/:id', async (req, res, next) => {
 });
 
 
-
 cardRouter.get('/cards', async (req, res, next) => {
   try {
     const cards = await getCardsByFilter(req.query)

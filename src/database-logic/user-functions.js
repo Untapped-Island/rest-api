@@ -6,25 +6,29 @@ async function addCardToProfileById(cardId, username) {
       id: cardId
     }
   })
-  console.log('CARD FOUND')
-  console.log(card)
-  const player = await prisma.player.update({
-    where: {
-      name: username
-    },
-    data: {
-      Card: {
-        create: { 
-          card: {
-            connect: {
-              id: cardId
+  if (card) {
+    await prisma.player.update({
+      where: {
+        name: username
+      },
+      data: {
+        Card: {
+          create: { 
+            card: {
+              connect: {
+                id: cardId
+              }
             }
           }
         }
       }
-    }
-  })
-  return player
+    })
+    return card
+  } else {
+    console.error('Card not found')
+    return null
+  }
+
 }
 
 async function getUserId(name){
