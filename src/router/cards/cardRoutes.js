@@ -8,16 +8,20 @@ const cardRouter = express.Router();
 // USE MIDDLEWARE IN ALL ROUTES
 // const bearerAuth = require('../../auth/middleware/bearer');
 
-const { 
-  getOneCardById, 
+const {
+  getOneCardById,
   getCardsByFilter,
 } = require('../../database-logic/get-card-functions');
 
 
-  cardRouter.get('/cards/:id', async (req, res, next) => {
-    try {
-      const card = await getOneCardById(req.params.id)
+cardRouter.get('/cards/:id', async (req, res, next) => {
+  try {
+    const card = await getOneCardById(req.params.id)
+    if (!card) {
+      throw new Error('There is no card with that id')
+    } else {
       res.status(200).send(card)
+    }
   } catch (err) {
     console.error(err)
     next(err)

@@ -9,11 +9,11 @@ const portfolioRouter = express.Router();
 
 const bearerAuth = require('../../auth/middleware/bearer');
 
-const { 
+const {
   addCardToProfileById,
   getUserId,
   getUniqueCard,
-  deleteUniqueCard
+  deleteUniqueCard,
 } = require('../../database-logic/user-functions')
 
 const { 
@@ -40,7 +40,7 @@ portfolioRouter.get('/users/:username', bearerAuth, async (req, res, next) => {
   } else {
     next(`User ${req.params.username} not found.`)
   }
-}) 
+})
 
 portfolioRouter.get('/users/:username/cards', bearerAuth, async (req, res, next) => {
   try {
@@ -68,11 +68,11 @@ portfolioRouter.post('/users/:username/cards', bearerAuth, async (req, res, next
       // }
     } else {
       return res.status(401).send('Cannot add card to a portfolio that you do not own.')
-     
+
     }
   } catch (err) {
     console.error(err);
-    next(err);    
+    next(err);
   }
 })
 
