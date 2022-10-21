@@ -6,7 +6,6 @@ const express = require('express');
 
 const cardRouter = express.Router();
 // USE MIDDLEWARE IN ALL ROUTES
-
 // const bearerAuth = require('../../auth/middleware/bearer');
 
 const {

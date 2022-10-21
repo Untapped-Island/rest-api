@@ -22,7 +22,9 @@ app.use(cors());
 app.use(express.json());
 
 
-// const PORT = process.env || 3002
+app.get('/', (req, res, next) => {
+  res.status(200).send('Welcome to Untapped Island!')
+})
 
 // signup/signin route from router->authCreate
 app.use(authSignin);
@@ -37,6 +39,6 @@ app.use(serverError);
 app.use(notFound);
 
 module.exports = {
- start:(PORT) => app.listen(PORT, '127.0.0.1', console.log('Server has started on: ', PORT)),
+ start:(PORT) => app.listen(PORT, console.log('Server has started on: ', PORT)),
  app
 }
