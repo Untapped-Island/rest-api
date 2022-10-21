@@ -5,7 +5,7 @@ const { app } = require('../src/server');
 const mockRequest = supertest(app);
 
 let userData = {
-  username: 'user23',
+  username: 'user',
   password: 'test',
 };
 
@@ -96,11 +96,23 @@ describe('User Routes', () => {
     const verify = await mockRequest.get(`/users/${userData.username}`).set('Authorization', `Bearer ${userData.token}`)
     
     expect(response.status).toEqual(500)
-    expect(response.body.message).toEqual("Delete error occurred")
+    expect(response.body.message).toEqual('Delete error occurred')
   })
   test('Fail to update a user that does not exist', async () => {
     const response = await mockRequest.put(`/users/${userData.username}`).set('Authorization', `Bearer ${userData.token}`).send(userData);
     expect(response.status).toEqual(500);
-    expect(response.body.message).toEqual("update error occurred");
+    expect(response.body.message).toEqual('update error occurred');
+  })
+  test('Fail to delete a user you do not own', async () => {
+    const response = await mockRequest.delete(`/users/other${userData.username}`).set('Authorization', `Bearer ${userData.token}`)
+    const verify = await mockRequest.get(`/users/${userData.username}`).set('Authorization', `Bearer ${userData.token}`)
+    
+    expect(response.status).toEqual(500)
+    expect(response.body.message).toEqual('Cannot delete an account you do not own')
+  })
+  test('Fail to update a user you do not own', async () => {
+    const response = await mockRequest.put(`/users/other${userData.username}`).set('Authorization', `Bearer ${userData.token}`).send(userData);
+    expect(response.status).toEqual(500);
+    expect(response.body.message).toEqual('Cannot edit an account you do not own');
   })
 })
