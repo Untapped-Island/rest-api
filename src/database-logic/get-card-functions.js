@@ -9,14 +9,14 @@ async function getOneCardById(id) {
   return card
 }
 
-async function getOneCardByName(name) {
-  const card = await prisma.card.findUnique({
-    where: {
-      name: name
-    }
-  })
-  return card
-}
+// async function getOneCardByName(name) {
+//   const card = await prisma.card.findUnique({
+//     where: {
+//       name: name
+//     }
+//   })
+//   return card
+// }
 
 async function getCardsByFilter(query, user) {
   let allSearchQueries = []
@@ -116,6 +116,6 @@ async function getCardsByFilter(query, user) {
 
 module.exports = {
   getOneCardById,
-  getOneCardByName,
+  // getOneCardByName,
   getCardsByFilter
 }
