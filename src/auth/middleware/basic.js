@@ -39,7 +39,9 @@ async function basicAuth(req, res, next) {
       } else {
         next('Invalid username or password');
       }
-    } else next('Invalid username or password');
+    } else {
+      next('Invalid username or password');
+    }
   }
 }
 module.exports = basicAuth;

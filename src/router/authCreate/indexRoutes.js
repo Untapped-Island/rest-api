@@ -45,7 +45,7 @@ indexRouter.get('/userWelcome', (req, res) => {
         user: user.name,
       })
       console.log(`User ${user.name} created successfully`);
-      res.status(200).send({
+      res.status(201).send({
         userId: user.id,
         user: user.name,
         createdAt: user.createdAt,

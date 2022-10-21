@@ -36,8 +36,7 @@ app.use(authUser);
 app.use(serverError);
 app.use(notFound);
 
-
 module.exports = {
- start:(PORT) => app.listen(PORT, '127.0.0.1', console.log('Server has started on: ', PORT))
- 
+ start:(PORT) => app.listen(PORT, '127.0.0.1', console.log('Server has started on: ', PORT)),
+ app
 }
