@@ -8,8 +8,8 @@ const userRouter = express.Router();
 // middle
 const bearerAuth = require('../../auth/middleware/bearer');
 
-// const { usersSchema } = require('../../src/auth/models/usersSchema');
 const { prisma } = require('.prisma/client');
+
 
 userRouter.get('/users', bearerAuth, async (req, res, next) => {
 
